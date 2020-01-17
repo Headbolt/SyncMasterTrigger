@@ -37,7 +37,7 @@ elevate="YES"
 ForeBack="BACKGROUND"
 #
 # Set the name of the script for later logging
-ScriptName="xxxxxx - Login - OneDrive Settings"
+ScriptName="append prefix here as needed - Login - OneDrive Settings"
 #
 ###############################################################################################################################################
 #
