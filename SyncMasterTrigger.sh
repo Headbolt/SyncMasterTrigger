@@ -19,9 +19,12 @@
 #
 # HISTORY
 #
-#	Version: 1.0 - 17/01/2020
+#	Version: 1.1 - 20/01/2020
 #
 #	- 17/01/2020 - V1.0 - Created by Headbolt
+#
+#	- 18/01/2020 - V1.1 - Created by Headbolt
+#							Updated to include error/exit codes for ease of identifying when OneDrive Not Found 
 #
 ###############################################################################################################################################
 #
@@ -31,6 +34,8 @@
 #
 UserName="$3" # Grab the Username of the current logged in user from built in JAMF variable #3
 DefaultInstance="$4" # Grab the Default OneDrive Folder Name to be used from JAMF variable #4 eg OneDrive - Contoso
+#
+ExitCode=0
 #
 Pause="5"
 elevate="YES"
@@ -56,7 +61,7 @@ OneDriveFolderSearch(){
 /bin/echo Checking if OneDrive Folder Exists
 /bin/echo # Outputting a Blank Line for Reporting Purposes
 #
-GUID=$(sudo ls /Users/$UserName/Library/Application\ Support/OneDrive/settings/Business1/*.dat | rev | cut -c 5- | rev) # Get OneDrive Instance GUID.
+GUID=$(sudo ls /Users/$UserName/Library/Application\ Support/OneDrive/settings/Business1/*.dat | rev | cut -c 5- | rev ) # Get OneDrive Instance GUID.
 IniFile=$(/bin/echo $GUID.ini) # Use GUID to locate .ini File
 IniFileContents=$(cat "$IniFile") # Read contents of .ini file inot Variable
 IFS='"' # Internal Field Seperator Delimiter is set to Double Quote (")
@@ -86,8 +91,10 @@ if [[ "$OneDriveFolder" != "" ]]
 	then
 		/bin/echo OneDriveFolder Found
 		/bin/echo $OneDriveFolder
+		ExitCode=0
 	else
 		/bin/echo OneDriveFolder Not Found
+		ExitCode=5
 fi
 #
 }
@@ -186,5 +193,5 @@ if [[ "$OneDriveFolder" != "" ]]
 fi
 #
 SectionEnd
-#
 ScriptEnd
+exit $ExitCode
